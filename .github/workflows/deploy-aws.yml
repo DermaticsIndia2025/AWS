@@ -1,0 +1,82 @@
+name: Deploy to AWS (S3 + CloudFront)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  STACK_NAME: ${{ vars.AWS_STACK_NAME }}
+  BUCKET_NAME: ${{ vars.AWS_BUCKET_NAME }}
+  PRICE_CLASS: ${{ vars.AWS_PRICE_CLASS }}
+  ALIASES: ${{ vars.AWS_ALIASES }}
+  ACM_CERT_ARN: ${{ vars.AWS_ACM_CERT_ARN }}
+  INVALIDATE: ${{ vars.AWS_INVALIDATE }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build and verify
+        run: npm run deploy-prep
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Create/Update CloudFormation stack
+        run: |
+          aws cloudformation deploy \
+            --template-file aws/cloudformation/static-site.yaml \
+            --stack-name "$STACK_NAME" \
+            --parameter-overrides \
+              BucketName="$BUCKET_NAME" \
+              PriceClass="${PRICE_CLASS:-PriceClass_100}" \
+              Aliases="${ALIASES}" \
+              AcmCertificateArn="${ACM_CERT_ARN}" \
+            --region "$AWS_REGION"
+
+      - name: Fetch stack outputs
+        id: outputs
+        run: |
+          DOMAIN=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --region "$AWS_REGION" --query "Stacks[0].Outputs[?OutputKey=='DistributionDomainNameOut'].OutputValue" --output text)
+          DIST_ID=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --region "$AWS_REGION" --query "Stacks[0].Outputs[?OutputKey=='DistributionIdOut'].OutputValue" --output text)
+          echo "domain=$DOMAIN" >> $GITHUB_OUTPUT
+          echo "dist_id=$DIST_ID" >> $GITHUB_OUTPUT
+
+      - name: Upload site to S3
+        run: |
+          aws s3 sync dist "s3://$BUCKET_NAME" --delete --cache-control max-age=31536000,public --exclude index.html
+          aws s3 cp dist/index.html "s3://$BUCKET_NAME/index.html" --cache-control no-cache,private
+
+      - name: Invalidate CloudFront (optional)
+        if: ${{ env.INVALIDATE == 'true' || env.INVALIDATE == '1' || env.INVALIDATE == 'yes' }}
+        run: |
+          aws cloudfront create-invalidation --distribution-id "${{ steps.outputs.outputs.dist_id }}" --paths "/*"
+
+      - name: Done
+        run: echo "Deployed: https://${{ steps.outputs.outputs.domain }}"
+
+
