@@ -44,8 +44,15 @@ AWS Amplify me aapka React app automatically deploy ho jayega GitHub repo se. Ye
 1. **"Environment variables"** section me:
    ```
    Key: GEMINI_API_KEY
-   Value: your_actual_gemini_api_key_here
+   Value: AIzaSyDrL08rqCclbYV577ZwSn04..sCbchb43I,AIzaSyDGYL-Zpi6_r0...Hu8bASRqR9UuPtb6534
    ```
+   
+   **Multiple API Keys Support:**
+   - Comma-separated keys: `key1,key2,key3`
+   - Spaces allowed: `key1, key2, key3`
+   - Automatic failover if one key fails
+   - Better reliability and higher quotas
+   
 2. **"Next"** click karein
 
 ### Step 5: Deploy

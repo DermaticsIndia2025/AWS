@@ -39,9 +39,13 @@ A React-based AI-powered skincare advisor that provides personalized skincare re
    ```
 
 3. **Set up environment variables**
-   - Copy `.env.local` and replace `PLACEHOLDER_API_KEY` with your actual Gemini API key
+   - Copy `env.example` to `.env` and add your Gemini API key(s)
    ```
-   GEMINI_API_KEY=your_actual_gemini_api_key_here
+   # Single key
+   GEMINI_API_KEY=your_gemini_api_key_here
+   
+   # Multiple keys (comma-separated for failover)
+   GEMINI_API_KEY=key1,key2,key3
    ```
 
 4. **Run the development server**
@@ -154,7 +158,7 @@ ai_skincare_app/
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `GEMINI_API_KEY` | Google Gemini AI API key | Yes |
+| `GEMINI_API_KEY` | Google Gemini AI API key(s). Multiple keys supported (comma-separated) for failover | Yes |
 
 ## Browser Support
 
