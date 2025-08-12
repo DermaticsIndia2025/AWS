@@ -10,7 +10,8 @@
     "deploy-check": "node deploy-check.js",
     "verify-build": "node verify-build.js",
     "deploy-prep": "npm run deploy-check && npm run build && npm run verify-build",
-    "deploy:aws": "powershell -ExecutionPolicy Bypass -File aws/deploy.ps1"
+    "deploy:aws": "powershell -ExecutionPolicy Bypass -File aws/deploy.ps1",
+    "deploy:amplify": "echo 'Push to main branch to deploy on AWS Amplify'"
   },
   "dependencies": {
     "react": "^19.1.0",

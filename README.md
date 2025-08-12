@@ -204,7 +204,25 @@ ai_skincare_app/
 - Run `npm run deploy-check` to verify setup
 - Check build logs in Render dashboard
 
-## Deployment to AWS (S3 + CloudFront)
+## Deployment to AWS
+
+### Option 1: AWS Amplify (Recommended - Like Render!)
+
+**Simple GitHub to AWS deployment!**
+
+1. **AWS Amplify Console** → **New app** → **Host web app**
+2. **GitHub connect** → **Repository select** → **Branch select**
+3. **Build settings** (auto-detect)
+4. **Environment variables** add: `GEMINI_API_KEY`
+5. **Save and deploy** = Done!
+
+**Result**: `https://main.abc123.amplifyapp.com`
+
+**Auto-deploy**: Push to main = Automatic deployment
+
+See `AWS_AMPLIFY_DEPLOYMENT_GUIDE.md` for detailed steps.
+
+### Option 2: AWS S3 + CloudFront (Advanced)
 
 See `aws/README_AWS_DEPLOY.md`.
 
