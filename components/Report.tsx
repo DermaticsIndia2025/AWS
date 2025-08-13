@@ -247,16 +247,18 @@ const Report: React.FC<ReportProps> = ({
                                                         <h5 className="text-sm font-semibold text-slate-800 mb-3">Suggested Alternatives:</h5>
                                                         <ul className="space-y-3">
                                                             {step.alternatives.map(alt => (
-                                                                <li key={alt.productId} className="flex items-center gap-3">
-                                                                    <img src={alt.productImageUrl} alt={alt.productName} className="w-12 h-12 object-contain rounded-md bg-white p-1 border border-slate-200 flex-shrink-0" />
-                                                                    <div className="flex-grow">
-                                                                        <p className="text-sm font-medium text-slate-700 leading-tight">{alt.productName}</p>
+                                                                <li key={alt.productId} className="flex flex-col gap-2">
+                                                                    <div className="flex items-center gap-3">
+                                                                        <img src={alt.productImageUrl} alt={alt.productName} className="w-12 h-12 object-contain rounded-md bg-white p-1 border border-slate-200 flex-shrink-0" />
+                                                                        <div className="flex-grow">
+                                                                            <p className="text-sm font-medium text-slate-700 leading-tight">{alt.productName}</p>
+                                                                        </div>
                                                                     </div>
                                                                     <Button
                                                                         onClick={() => handleAddToCartClick(alt)}
                                                                         variant={addedProducts.includes(alt.productId) ? 'secondary' : 'secondary'}
                                                                         size="sm"
-                                                                        className={`!p-2 !rounded-md transition-colors ${addedProducts.includes(alt.productId) ? '!bg-green-100 !border-green-300 !text-green-600' : ''}`}
+                                                                        className={`!p-2 !rounded-md transition-colors w-full ${addedProducts.includes(alt.productId) ? '!bg-green-100 !border-green-300 !text-green-600' : ''}`}
                                                                         aria-label={`Add ${alt.productName} to cart`}
                                                                     >
                                                                         {addedProducts.includes(alt.productId)
@@ -304,16 +306,18 @@ const Report: React.FC<ReportProps> = ({
                                                         <h5 className="text-sm font-semibold text-slate-800 mb-3">Suggested Alternatives:</h5>
                                                         <ul className="space-y-3">
                                                             {step.alternatives.map(alt => (
-                                                                <li key={alt.productId} className="flex items-center gap-3">
-                                                                    <img src={alt.productImageUrl} alt={alt.productName} className="w-12 h-12 object-contain rounded-md bg-white p-1 border border-slate-200 flex-shrink-0" />
-                                                                    <div className="flex-grow">
-                                                                        <p className="text-sm font-medium text-slate-700 leading-tight">{alt.productName}</p>
+                                                                <li key={alt.productId} className="flex flex-col gap-2">
+                                                                    <div className="flex items-center gap-3">
+                                                                        <img src={alt.productImageUrl} alt={alt.productName} className="w-12 h-12 object-contain rounded-md bg-white p-1 border border-slate-200 flex-shrink-0" />
+                                                                        <div className="flex-grow">
+                                                                            <p className="text-sm font-medium text-slate-700 leading-tight">{alt.productName}</p>
+                                                                        </div>
                                                                     </div>
                                                                     <Button
                                                                         onClick={() => handleAddToCartClick(alt)}
                                                                         variant={addedProducts.includes(alt.productId) ? 'secondary' : 'secondary'}
                                                                         size="sm"
-                                                                        className={`!p-2 !rounded-md transition-colors ${addedProducts.includes(alt.productId) ? '!bg-green-100 !border-green-300 !text-green-600' : ''}`}
+                                                                        className={`!p-2 !rounded-md transition-colors w-full ${addedProducts.includes(alt.productId) ? '!bg-green-100 !border-green-300 !text-green-600' : ''}`}
                                                                         aria-label={`Add ${alt.productName} to cart`}
                                                                     >
                                                                         {addedProducts.includes(alt.productId)
